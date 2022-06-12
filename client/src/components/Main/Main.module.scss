@@ -1,0 +1,13 @@
+$mainColor: #0066ff;
+$secondColor: #cacaca;
+
+.main {
+    &_noVideo {
+        margin-top: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 5px rgba($color: #000000, $alpha: 0.1);
+        padding: 5px;
+        color: $mainColor;
+    }
+}

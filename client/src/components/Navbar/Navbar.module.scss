@@ -1,0 +1,36 @@
+$mainColor: #0066ff;
+$secondColor: #cacaca;
+
+.navbar{
+    width: 100%;
+    height: 50px;
+    min-height: 50px;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px rgba($color: #000000, $alpha: 0.1);
+    h1{
+        color: $mainColor;
+        cursor: pointer;
+    }
+    &_wrap{
+        position: relative;
+        width: 1140px;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    &_items{
+        display: flex;
+        a{
+            text-decoration: none;
+            color: #000000;
+            &:not(:last-of-type){
+                margin-right: 15px;
+            }
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+    }
+}

@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  client:
+    container_name: client
+    build:
+      context: ./client
+    volumes:
+      - ./client/:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+  server:
+    container_name: server
+    build:
+      context: ./server
+    env_file:
+      - ./server/.env.docker
+    volumes:
+      - ./server/:/app
+      - /app/node_modules
+    ports:
+      - 5000:5000
+    command: npm run start:dev
+    depends_on:
+      - prisma
+  postgres:
+    container_name: postgres
+    image: postgres
+    env_file:
+      - ./server/.env.docker
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    env_file:
+      - ./server/.env.docker
+    ports: 
+      - 5050:80
+    volumes:
+      - /var/lib/pgadmin
+  prisma:
+    container_name: prisma
+    build:
+      context: ./server
+    env_file:
+      - ./server/.env.docker
+    volumes:
+      - ./server/:/app
+      - /app/node_modules
+    command: >
+      sh -c "npm run prisma:generate &&
+             npm run migration:dev &&
+             npm run seed"
+    depends_on:
+      - postgres
+    
+volumes:
+  pgdata:

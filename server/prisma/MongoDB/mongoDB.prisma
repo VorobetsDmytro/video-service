@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+  output = "./generated/client"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URL")
+}
+
+model Log {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  operation String
+  createdBy String
+  createdAt DateTime @default(now())
+}

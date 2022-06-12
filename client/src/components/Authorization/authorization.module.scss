@@ -1,0 +1,48 @@
+$mainColor: #0066ff;
+$secondColor: #cacaca;
+
+.authorization{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 50px);
+    &__block{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 285px;
+        height: 285px;
+        border-radius: 30px;
+        background-color: white;
+        box-shadow: 0 15px 20px rgba($color: #000000, $alpha: 0.1);
+        h1,
+        input{
+            margin-bottom: 15px;
+            padding: 5px 5px;
+        }
+        h1{
+            text-align: center;
+            color: $mainColor;
+            text-shadow: rgba($color: #000000, $alpha: 0.1) 2px 2px 0px;
+        }
+    }
+    &__input {
+        height: 25px;
+        border: 1px solid $mainColor;
+        border-radius: 3px;
+    }
+    &__btn{
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        background-color: $secondColor;
+        box-shadow: 0 5px 15px rgba($color: #000000, $alpha: 0.1);
+        transition: background-color 0.1s ease-in-out;
+        font-size: 14px;
+        &:hover{
+            background-color: $mainColor;
+        }
+    }
+}

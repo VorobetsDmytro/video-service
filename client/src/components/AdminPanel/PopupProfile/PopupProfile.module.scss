@@ -1,0 +1,54 @@
+$mainColor: #0066ff;
+$secondColor: #cacaca;
+
+.popup{
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    &__body{
+        padding: 10px;
+        z-index: 2;
+        background-color: #ffffff;
+        border-radius: 10px;
+        display: grid;
+        box-shadow: 0 0 10px rgba($color: #000000, $alpha: 0.1);
+    }
+    &__name,
+    &__input,
+    &__btns{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    &__input{
+        input{
+            padding: 5px;
+            border: 1px solid $mainColor;
+            border-radius: 3px;
+        }
+    }
+    &__btns{
+        display: flex;
+        button{
+            margin: 0 5px;
+            padding: 5px 15px;
+            background-color: $secondColor;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba($color: #000000, $alpha: 0.1);
+            transition: background-color 0.1s ease-in-out;
+            cursor: pointer;
+            &:hover{
+                background-color: $mainColor;
+            }
+        }
+    }
+}

@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+model SubscriptionType {
+  id             String         @id
+  name           String
+  maxDownloads   Int
+  maxViews       Int
+  canAddComments Boolean
+  subscriptions  Subscription[]
+  price          Int
+  duration       Int
+}
+
+model Subscription {
+  id                 String            @id
+  subscriptionType   SubscriptionType? @relation(fields: [subscriptionTypeId], references: [id])
+  subscriptionTypeId String?
+  user               User?             @relation(fields: [userId], references: [id])
+  userId             String?           @unique
+  downloadsLeft      Int
+  viewsForTodayLeft  Int
+  lastView           DateTime?
+  lastDownload       DateTime?
+  lastViewedVideoId  String?
+  expiresIn          DateTime
+}
+
+model Role {
+  id    String @id
+  value String
+  users User[]
+}
+
+model User {
+  id             String          @id
+  email          String          @unique
+  firstname      String
+  lastname       String
+  avatar         String?
+  password       String
+  token          Token?
+  activationLink Activationlink?
+  role           Role?           @relation(fields: [roleId], references: [id])
+  roleId         String?
+  createdAt      DateTime        @default(now())
+  resetPassword  ResetPassword?
+  changeEmail    ChangeEmail?
+  subscription   Subscription?
+  creditCards    CreditCard[]
+  comments       Comment[]
+  bans           Ban[]
+}
+
+model Token {
+  user              User?    @relation(fields: [userId], references: [id])
+  userId            String?  @unique
+  accessToken       String   @id
+  isActive          Boolean
+  lastAuthorization DateTime @default(now())
+}
+
+model Activationlink {
+  user        User?   @relation(fields: [userId], references: [id])
+  userId      String? @unique
+  link        String  @id
+  isActivated Boolean @default(false)
+}
+
+model ResetPassword {
+  id         String  @id
+  user       User?   @relation(fields: [userId], references: [id])
+  userId     String? @unique
+  token      String
+  isApproved Boolean @default(false)
+}
+
+model ChangeEmail {
+  id       String  @id
+  user     User?   @relation(fields: [userId], references: [id])
+  userId   String? @unique
+  newEmail String
+}
+
+model CreditCard {
+  id     String  @id
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+  type   String
+  number String
+  money  Int     @default(0)
+}
+
+model Video {
+  id          String    @id
+  title       String
+  previewPath String
+  videoPath   String
+  duration    Int
+  createdAt   DateTime  @default(now())
+  comments    Comment[]
+}
+
+model Comment {
+  id        String   @id
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  video     Video?   @relation(fields: [videoId], references: [id])
+  videoId   String?
+  text      String
+  createdAt DateTime @default(now())
+}
+
+model Ban {
+  id         String    @id
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?
+  banReason  String
+  bannedById String
+  bannedAt   DateTime  @default(now())
+  unBannedAt DateTime?
+}

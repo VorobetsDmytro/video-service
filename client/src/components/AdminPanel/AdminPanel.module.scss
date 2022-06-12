@@ -1,0 +1,53 @@
+$mainColor: #0066ff;
+$secondColor: #cacaca;
+.admin {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba($color: #000000, $alpha: 0.1);
+    position: fixed;
+    top: 100px;
+    right: 50px;
+    &_popup {
+        cursor: pointer;
+        &:hover {
+            color: $mainColor;
+        }
+    }
+    &_title {
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+        border-bottom: 2px solid $secondColor;
+        h2 {
+            color: $mainColor;
+        }
+    }
+    &_item {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #dbdbdb;
+    }
+    &_btn{
+        padding: 5px 10px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        background-color: $secondColor;
+        box-shadow: 0 5px 15px rgba($color: #000000, $alpha: 0.1);
+        transition: background-color 0.1s ease-in-out;
+        font-size: 14px;
+        &:hover{
+            background-color: $mainColor;
+        }
+    }
+    &_input {
+        height: 25px;
+        border: 1px solid $mainColor;
+        border-radius: 3px;
+        margin-right: 10px;
+    }
+}
