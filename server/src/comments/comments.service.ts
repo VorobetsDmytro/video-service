@@ -10,6 +10,7 @@ import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { RolesService } from '../roles/roles.service';
 import { RoleTypes } from '../roles/roles.type';
 import { LogsService } from '../logs/logs.service';
+import { EditCommentDto } from './dto/edit-comment.dto';
 
 @Injectable()
 export class CommentsService {
@@ -41,6 +42,18 @@ export class CommentsService {
         const commentId = await this.generateCommentId();
         const comment = await this.createComment({...dto, id: commentId, userId: user.id});
         await this.logsService.create({operation: `Create comment: Comment id: < ${comment.id} >`, createdBy: user.id});
+        return {comment};
+    }
+
+    async edit(dto: EditCommentDto, commentId: string, req){
+        const userReq = req.user as Express.User;
+        const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
+        if(!user)
+            throw new HttpException('The user was not found.', 400);
+        let comment = await this.getCommentById(commentId);
+        if(!comment)
+            throw new HttpException('The comment was not found.', 400);
+        comment = await this.updateComment(dto, comment);
         return {comment};
     }
 
@@ -82,6 +95,10 @@ export class CommentsService {
 
     async createComment(dto: Prisma.CommentUncheckedCreateInput): Promise<Comment>{
         return this.postgreSQLService.comment.create({data: dto, include: {user: {select: SelectSecuredUser}}});
+    }
+
+    async updateComment(dto: Prisma.CommentUncheckedUpdateInput, comment: Comment): Promise<Comment>{
+        return this.postgreSQLService.comment.update({data: dto, where: {id: comment.id}});
     }
 
     async generateCommentId(): Promise<string>{
