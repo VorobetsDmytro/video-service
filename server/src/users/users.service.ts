@@ -7,6 +7,8 @@ import { RolesService } from '../roles/roles.service';
 import { RoleTypes } from '../roles/roles.type';
 import { v4 } from "uuid";
 import { ISelectUser, SecuredUser, SelectFullUser } from './users.type';
+import { ChangePassDto } from './dto/change-pass.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +44,19 @@ export class UsersService {
             throw new HttpException('No authorization', 401);
         await this.logsService.create({operation: 'Get all the users', createdBy: user.id});
         return this.postgreSQLService.user.findMany({select: SelectFullUser});
+    }
+
+    async changePass(dto: ChangePassDto, req){
+        const userReq = req.user as Express.User;
+        const user = await this.postgreSQLService.user.findUnique({where: {id: userReq.id}});
+        if(!user)
+            throw new HttpException('No authorization', 401);
+        const comparePasswords = await bcrypt.compare(dto.oldPass, user.password);
+        if(!comparePasswords)
+            throw new HttpException('Incorrect data.', 400);
+        const hashPassword = await bcrypt.hash(dto.newPass, 5);
+        await this.updateUser({password: hashPassword}, user);
+        return {message: 'The password has been changed successfully!'};
     }
 
     async updateUser(dto: Prisma.UserUncheckedUpdateInput, user: User | SecuredUser): Promise<User>{

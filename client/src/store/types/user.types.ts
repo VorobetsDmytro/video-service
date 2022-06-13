@@ -4,6 +4,7 @@ export enum UserActionTypes {
     SET_USER = 'SET_USER',
     SET_CUR_VIDEO = 'SET_CUR_VIDEO',
     ADD_COMMENT = 'ADD_COMMENT',
+    EDIT_COMMENT = 'EDIT_COMMENT',
     REMOVE_COMMENT = 'REMOVE_COMMENT',
     CAN_DOWNLOAD = 'CAN_DOWNLOAD',
     LOGOUT = 'LOGOUT'
@@ -29,6 +30,10 @@ export interface AddCommentAction {
     type: UserActionTypes.ADD_COMMENT;
     payload: Comment;
 }
+export interface EditCommentAction {
+    type: UserActionTypes.EDIT_COMMENT;
+    payload: Comment;
+}
 
 export interface RemoveCommentAction {
     type: UserActionTypes.REMOVE_COMMENT,
@@ -47,6 +52,7 @@ export interface CanDownloadAction {
 export type UserAction = SetUserAction 
                        | SetCurVideoAcrion 
                        | AddCommentAction
+                       | EditCommentAction
                        | LogoutAction
                        | RemoveCommentAction
                        | CanDownloadAction;

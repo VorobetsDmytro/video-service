@@ -37,6 +37,12 @@ export const userReducer = (state = defaultState, action: UserAction): UserState
             if(state.curVideo)
                 state.curVideo.comments.unshift(action.payload)
             return {...state};
+        case UserActionTypes.EDIT_COMMENT:
+            if(state.curVideo)
+                state.curVideo.comments = state.curVideo.comments.map(comment => comment.id !== action.payload.id
+                                                                        ? comment
+                                                                        : {...comment, text: action.payload.text})
+            return {...state};
         case UserActionTypes.REMOVE_COMMENT:
             if(state.curVideo)
                 state.curVideo.comments = state.curVideo.comments.filter(comment => comment.id !== action.payload)
@@ -68,6 +74,7 @@ export const userReducer = (state = defaultState, action: UserAction): UserState
 export const setUser = (payload: User): UserAction => ({type: UserActionTypes.SET_USER, payload});
 export const setCurVideo = (payload: VideoAcesses): UserAction => ({type: UserActionTypes.SET_CUR_VIDEO, payload}); 
 export const addComment = (payload: Comment): UserAction => ({type: UserActionTypes.ADD_COMMENT, payload});
+export const editCommentAction = (payload: Comment): UserAction => ({type: UserActionTypes.EDIT_COMMENT, payload});
 export const removeComment = (payload: string): UserAction => ({type: UserActionTypes.REMOVE_COMMENT, payload});
 export const canDownload = (payload: boolean): UserAction => ({type: UserActionTypes.CAN_DOWNLOAD, payload});
 export const logoutUser = (): UserAction => ({type: UserActionTypes.LOGOUT});

@@ -16,6 +16,7 @@ import { NewEmail } from './components/Profile/NewEmail/NewEmail';
 import { ForgotPassword } from './components/Authorization/ForgotPassword/ForgotPassword';
 import { ResetPassword } from './components/Authorization/ResetPassword/ResetPassword';
 import { AdminPanel } from './components/AdminPanel/AdminPanel';
+import { ChangePass } from './components/Authorization/ChangePass/ChangePass';
 
 export const App = () => {
   const {auth, ready} = useAuth();
@@ -33,6 +34,7 @@ export const App = () => {
       <Routes>
         <Route path={'/main'} element={<Main />}/>
         <Route path={'/profile'} element={<Profile />}/>
+        <Route path={'/change-pass'} element={<ChangePass />}/>
         {user.role && user.role.value === 'ADMIN' && <Route path={'/addVideo'} element={<AddVideo />}/>}
         <Route path={'/video/:videoId'} element={<WatchVideo />}/>
         <Route path={'/profile/change-email/accept/:changeEmailId'} element={<NewEmail />}/>

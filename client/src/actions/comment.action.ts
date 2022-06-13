@@ -1,7 +1,7 @@
 import { useCallback} from "react";
 import { CreateCommentDto } from "../components/WatchVideo/dto/create-comment.dto";
 import { useHttp } from "../hooks/http.hooks";
-import { addComment, removeComment } from "../store/reducers/user.reducer";
+import { addComment, removeComment, editCommentAction } from "../store/reducers/user.reducer";
 
 export const useComment = () => {
     const {request} = useHttp();
@@ -37,8 +37,25 @@ export const useComment = () => {
         }
     };
 
+    const editComment = (commentId: string, text: string) => {
+        return async (dispatch: any) => {
+            try {
+                const response = await request(`http://localhost:5000/comments/${commentId}`, 'PATCH', {text}, {Authorization: `Bearer ${localStorage.getItem('token')}`});
+                if(response instanceof Error)
+                    throw response;
+                if(response.message)
+                    alert(response.message);
+                dispatch(editCommentAction(response.comment));
+                return response;
+            } catch (error) {
+                alert(error);
+            }
+        }
+    }
+
     return {
         createComment,
-        deleteComment
+        deleteComment,
+        editComment
     }
 };

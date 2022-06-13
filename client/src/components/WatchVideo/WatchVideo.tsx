@@ -9,6 +9,7 @@ import styles from './WatchVideo.module.scss';
 import {v4} from 'uuid';
 import { setCurVideo } from "../../store/reducers/user.reducer";
 import { Loader } from "../Loader/Loader";
+import { Comment } from "./Comment/Comment";
 
 interface NextChunkDto {
     uploaded: number;
@@ -222,30 +223,7 @@ export const WatchVideo = () => {
 						</div>
 					}
 					{video.comments?.map((comment, index) => {
-						return (
-							<div key={index + Math.random()} className={styles.watchVideo_comment}>
-								{comment.user.avatar 
-								? <img className={styles.watchVideo_avatar} alt="Avatar" src={'http://localhost:5000/avatars/' + comment.user.avatar.split('\\').pop()}/> 
-								: <div className={styles.watchVideo_avatar}/>
-								}
-								<div className={styles.watchVideo_comment_body}>
-									<div className={styles.watchVideo_comment_delete}>
-										<div className={styles.watchVideo_comment_author}>
-											<h3>{comment.user?.firstname + ' ' + comment.user?.lastname}</h3>
-											<h5>{new Date(comment.createdAt).toLocaleDateString()}</h5>
-										</div>
-										{(comment.userId === user.id || (user.role && user.role.value === 'ADMIN')) && 
-											<div className={styles.watchVideo_comment_delete_btn}>
-												<h5 onClick={() => handleDeleteCommentClick(comment.id)}>Delete</h5>
-											</div>
-										}
-									</div>
-									<div>
-										<h4>{comment.text}</h4>
-									</div>
-								</div>
-							</div>
-						);
+						return <Comment key={index + Math.random()} comment={comment} handleDeleteCommentClick={handleDeleteCommentClick}/>
 					})}
 				</div>
 			</div>

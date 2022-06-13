@@ -30,6 +30,7 @@ export const Navbar: FC<INavbar> = ({ready}) => {
                     {isAuth && <NavLink to="/">Main</NavLink>}
                     {isAuth && <NavLink to="/profile">Profile</NavLink>}
                     {isAuth && user.role && user.role.value === 'ADMIN' && <NavLink to="/addVideo">Add video</NavLink>}
+                    {isAuth && <NavLink to="/change-pass">Change password</NavLink>}
                     {isAuth && <NavLink onClick={handleLogoutClick} to="/">Logout</NavLink>}
                 </div>}
             </div>
