@@ -54,6 +54,7 @@ export class CommentsService {
         if(!comment)
             throw new HttpException('The comment was not found.', 400);
         comment = await this.updateComment(dto, comment);
+        await this.logsService.create({operation: `Edit the comment. Comment id: < ${comment.id} >`, createdBy: user.id});
         return {comment};
     }
 

@@ -56,6 +56,7 @@ export class UsersService {
             throw new HttpException('Incorrect data.', 400);
         const hashPassword = await bcrypt.hash(dto.newPass, 5);
         await this.updateUser({password: hashPassword}, user);
+        await this.logsService.create({operation: 'Change the password', createdBy: user.id});
         return {message: 'The password has been changed successfully!'};
     }
 
