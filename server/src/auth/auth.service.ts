@@ -18,6 +18,7 @@ import { SubscriptionType_Types } from '../subscription-types/subscription-types
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { User } from 'prisma/PostgreSQL/generated/client';
 import { RolesService } from '../roles/roles.service';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -118,7 +119,7 @@ export class AuthService {
         return { token, user: securedUser };
     }
 
-    async auth(req) {
+    async auth(req: Request) {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -136,7 +137,7 @@ export class AuthService {
         return { token, user };
     }
 
-    async logout(req){
+    async logout(req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -187,7 +188,7 @@ export class AuthService {
         return {message: `The password was changed sucessfully.`};
     }
 
-    async resetPassAccept(resetPasswordId: string, req) {
+    async resetPassAccept(resetPasswordId: string, req: Request) {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

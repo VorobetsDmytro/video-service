@@ -3,6 +3,7 @@ import { Roles } from '../decorators/roles.decorator';
 import { IsBannedGuard } from '../guards/is-banned.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { ResetPasswordsService } from './reset-passwords.service';
+import { Request } from 'express';
 
 @Controller('reset-passwords')
 export class ResetPasswordsController {
@@ -12,7 +13,7 @@ export class ResetPasswordsController {
     @Roles(['ADMIN'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    getAll(@Req() req){
+    getAll(@Req() req: Request){
         return this.resetPasswordsService.getAll(req);
     }
 }

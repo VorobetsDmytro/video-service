@@ -8,6 +8,7 @@ import { UsersService } from '../users/users.service';
 import { SelectSecuredUser } from '../users/users.type';
 import { v4 } from "uuid";
 import { ChangeSubscriptionDto } from './dto/change-subscription.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class SubscriptionsService {
@@ -21,7 +22,7 @@ export class SubscriptionsService {
         return this.postgreSQLService.subscription.create({data: dto});
     }
 
-    async getAll(req): Promise<Subscription[]>{
+    async getAll(req: Request): Promise<Subscription[]>{
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -30,7 +31,7 @@ export class SubscriptionsService {
         return this.postgreSQLService.subscription.findMany();
     }
 
-    async changeSubscription(dto: ChangeSubscriptionDto, req){
+    async changeSubscription(dto: ChangeSubscriptionDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

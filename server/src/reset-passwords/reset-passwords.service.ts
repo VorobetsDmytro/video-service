@@ -5,6 +5,7 @@ import { v4 } from "uuid";
 import { UsersService } from '../users/users.service';
 import { SelectSecuredUser } from '../users/users.type';
 import { LogsService } from '../logs/logs.service';
+import { Request } from 'express';
 
 @Injectable()
 export class ResetPasswordsService {
@@ -12,7 +13,7 @@ export class ResetPasswordsService {
                 private usersService: UsersService,
                 private logsService: LogsService){}
 
-    async getAll(req): Promise<ResetPassword[]>{
+    async getAll(req: Request): Promise<ResetPassword[]>{
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

@@ -5,6 +5,7 @@ import { IsLogedInGuard } from '../guards/is-loged-in.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { CreateSubscriptionTypeDto } from './dto/create-subscription-type.dto';
 import { SubscriptionTypesService } from './subscription-types.service';
+import { Request } from 'express';
 
 @Controller('subscription-types')
 export class SubscriptionTypesController {
@@ -15,7 +16,7 @@ export class SubscriptionTypesController {
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
     @HttpCode(201)
-    create(@Body() dto: CreateSubscriptionTypeDto, @Req() req){
+    create(@Body() dto: CreateSubscriptionTypeDto, @Req() req: Request){
         return this.subscriptionTypesService.create(dto, req);
     }
 
@@ -23,7 +24,7 @@ export class SubscriptionTypesController {
     @UseGuards(IsLogedInGuard)
     @UseGuards(IsBannedGuard)
     @HttpCode(200)
-    getAll(@Req() req){
+    getAll(@Req() req: Request){
         return this.subscriptionTypesService.getAll(req);
     }
 
@@ -32,7 +33,7 @@ export class SubscriptionTypesController {
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
     @HttpCode(200)
-    delete(@Param('name') name: string, @Req() req){
+    delete(@Param('name') name: string, @Req() req: Request){
         return this.subscriptionTypesService.delete(name, req);
     }
 }

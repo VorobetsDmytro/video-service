@@ -11,6 +11,7 @@ import { RolesService } from '../roles/roles.service';
 import { RoleTypes } from '../roles/roles.type';
 import { LogsService } from '../logs/logs.service';
 import { EditCommentDto } from './dto/edit-comment.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class CommentsService {
@@ -21,7 +22,7 @@ export class CommentsService {
                 private rolesService: RolesService,
                 private logsService: LogsService){}
 
-    async create(dto: CreateCommentDto, req){
+    async create(dto: CreateCommentDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -45,7 +46,7 @@ export class CommentsService {
         return {comment};
     }
 
-    async edit(dto: EditCommentDto, commentId: string, req){
+    async edit(dto: EditCommentDto, commentId: string, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -58,7 +59,7 @@ export class CommentsService {
         return {comment};
     }
 
-    async delete(commentId: string, req){
+    async delete(commentId: string, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

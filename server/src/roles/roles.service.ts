@@ -7,6 +7,7 @@ import { v4 } from "uuid";
 import { LogsService } from '../logs/logs.service';
 import { UsersService } from '../users/users.service';
 import { SelectSecuredUser } from '../users/users.type';
+import { Request } from 'express';
 
 @Injectable()
 export class RolesService {
@@ -14,7 +15,7 @@ export class RolesService {
                 private logsService: LogsService,
                 private usersService: UsersService){}
 
-    async create(dto: CreateRoleDto, req){
+    async create(dto: CreateRoleDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -28,7 +29,7 @@ export class RolesService {
         return role;
     }
 
-    async delete(value: string, req){
+    async delete(value: string, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -44,7 +45,7 @@ export class RolesService {
         return this.postgreSQLPrismaService.role.create({data: dto});
     }
 
-    async getAll(req): Promise<Role[]> {
+    async getAll(req: Request): Promise<Role[]> {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

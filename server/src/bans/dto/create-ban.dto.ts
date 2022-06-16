@@ -5,7 +5,7 @@ export class CreateBanDto {
     userId?: string;
 
     @IsString({message: 'The banReason must be a string.'})
-    @Length(2, 40, {message: 'The login can contain 2 characters minimum and 40 characters maximum'})
+    @Length(2, 40, {message: 'The banReason can contain: 2 min and 40 max characters.'})
     banReason: string;
 
     bannedBy?: string;

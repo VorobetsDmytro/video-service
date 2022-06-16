@@ -126,7 +126,7 @@ export class SocketsGateway implements OnGatewayInit {
     @SubscribeMessage('uploadingFile')
     async handleUploadingFile(client: Socket, payload: UploadingFileDto){
         const isAuth = await this.checkUser(client.handshake.auth.token); 
-        if(!isAuth)
+        if(!isAuth || !this.files[payload.fileName])
             return;
         this.files[payload.fileName].uploaded += payload.data.length;
         this.files[payload.fileName].data += payload.data;

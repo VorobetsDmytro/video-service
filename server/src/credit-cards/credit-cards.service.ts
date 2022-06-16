@@ -8,6 +8,7 @@ import { v4 } from "uuid";
 import { RemoveCreditCardDto } from './dto/remove-credit-card.dto';
 import { TopUpMyBalanceDto } from './dto/top-up-my-balance.dto';
 import { LogsService } from '../logs/logs.service';
+import { Request } from 'express';
 
 @Injectable()
 export class CreditCardsService {
@@ -15,7 +16,7 @@ export class CreditCardsService {
                 private usersService: UsersService,
                 private logsService: LogsService){}
 
-    async add(dto: CreateCreditCardDto, req){
+    async add(dto: CreateCreditCardDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -30,7 +31,7 @@ export class CreditCardsService {
         return {creditCard, message: 'Your credit card has been added successfully.'}
     }
 
-    async remove(dto: RemoveCreditCardDto, req){
+    async remove(dto: RemoveCreditCardDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -51,7 +52,7 @@ export class CreditCardsService {
         return this.postgreSQLService.creditCard.delete({where: {id: creditCard.id}});
     }
 
-    async getAll(req): Promise<CreditCard[]>{
+    async getAll(req: Request): Promise<CreditCard[]>{
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -85,7 +86,7 @@ export class CreditCardsService {
         return id;
     }
 
-    async topUpMyBalance(dto: TopUpMyBalanceDto, req){
+    async topUpMyBalance(dto: TopUpMyBalanceDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

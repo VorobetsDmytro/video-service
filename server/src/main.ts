@@ -5,6 +5,14 @@ import { AppModule } from './app.module';
 import { NotFoundExceptionFilter } from './filters/not-found-exception.filter';
 import * as path from 'path';
 
+declare global {
+  namespace Express {
+      interface Request {
+          user?: User | undefined;
+      }
+  }
+}
+
 const start = async () => {
   const PORT = process.env.PORT || 5000;
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {cors: true});

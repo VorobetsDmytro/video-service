@@ -30,8 +30,22 @@ export const useCreditCard = () => {
         }
     }
 
+    const removeTheCard = async (creditCardId: string) => {
+        try {
+            const response = await request(`http://localhost:5000/credit-cards/${creditCardId}`, 'DELETE', null, {Authorization: `Bearer ${localStorage.getItem('token')}`});
+            if(response instanceof Error)
+                throw response;
+            if(response.message)
+                alert(response.message);
+            return response;
+        } catch (error) {
+            alert(error);
+        }
+    }
+
     return {
         addCreditCard,
-        topUpBalance
+        topUpBalance,
+        removeTheCard
     }
 };

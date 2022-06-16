@@ -5,6 +5,7 @@ import { RolesGuard } from '../guards/roles.guard';
 import { CreditCardsService } from './credit-cards.service';
 import { CreateCreditCardDto } from './dto/create-credit-card.dto';
 import { TopUpMyBalanceDto } from './dto/top-up-my-balance.dto';
+import { Request } from 'express';
 
 @Controller('credit-cards')
 export class CreditCardsController {
@@ -14,7 +15,7 @@ export class CreditCardsController {
     @Roles(['SUBSCRIBER'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    addCard(@Body() dto: CreateCreditCardDto, @Req() req){
+    addCard(@Body() dto: CreateCreditCardDto, @Req() req: Request){
         return this.creditCardsService.add(dto, req);
     }
 
@@ -22,7 +23,7 @@ export class CreditCardsController {
     @Roles(['ADMIN'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    getAll(@Req() req){
+    getAll(@Req() req: Request){
         return this.creditCardsService.getAll(req);
     }
 
@@ -30,7 +31,7 @@ export class CreditCardsController {
     @Roles(['SUBSCRIBER'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    topUpMyBalance(@Body() dto: TopUpMyBalanceDto, @Param('creditCardId') creditCardId: string, @Req() req){
+    topUpMyBalance(@Body() dto: TopUpMyBalanceDto, @Param('creditCardId') creditCardId: string, @Req() req: Request){
         return this.creditCardsService.topUpMyBalance({...dto, creditCardId}, req);
     }
 
@@ -38,7 +39,7 @@ export class CreditCardsController {
     @Roles(['SUBSCRIBER'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    remove(@Param('creditCardId') creditCardId: string, @Req() req){
+    remove(@Param('creditCardId') creditCardId: string, @Req() req: Request){
         return this.creditCardsService.remove({creditCardId}, req);
     }
 }

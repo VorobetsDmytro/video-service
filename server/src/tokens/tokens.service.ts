@@ -6,6 +6,7 @@ import { LogsService } from '../logs/logs.service';
 import { RolesService } from '../roles/roles.service';
 import { UsersService } from '../users/users.service';
 import { SecuredUser, SelectSecuredUser } from '../users/users.type';
+import { Request } from 'express';
 
 @Injectable()
 export class TokensService {
@@ -44,7 +45,7 @@ export class TokensService {
         });
     }
 
-    async getAll(req): Promise<Token[]>{
+    async getAll(req: Request): Promise<Token[]>{
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

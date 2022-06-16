@@ -4,6 +4,7 @@ import { IsBannedGuard } from '../guards/is-banned.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { ChangeSubscriptionDto } from './dto/change-subscription.dto';
 import { SubscriptionsService } from './subscriptions.service';
+import { Request } from 'express';
 
 @Controller('subscriptions')
 export class SubscriptionsController {
@@ -13,7 +14,7 @@ export class SubscriptionsController {
     @Roles(['ADMIN'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    getAll(@Req() req){
+    getAll(@Req() req: Request){
         return this.subscriptionsService.getAll(req);
     }
 
@@ -21,7 +22,7 @@ export class SubscriptionsController {
     @Roles(['SUBSCRIBER'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    changeSubscription(@Body() dto: ChangeSubscriptionDto, @Req() req){
+    changeSubscription(@Body() dto: ChangeSubscriptionDto, @Req() req: Request){
         return this.subscriptionsService.changeSubscription(dto, req);
     }
 }

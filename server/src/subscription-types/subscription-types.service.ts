@@ -6,6 +6,7 @@ import { v4 } from "uuid";
 import { UsersService } from '../users/users.service';
 import { LogsService } from '../logs/logs.service';
 import { SelectSecuredUser } from '../users/users.type';
+import { Request } from 'express';
 
 @Injectable()
 export class SubscriptionTypesService {
@@ -13,7 +14,7 @@ export class SubscriptionTypesService {
                 private usersService: UsersService,
                 private logsService: LogsService){}
 
-    async create(dto: CreateSubscriptionTypeDto, req){
+    async create(dto: CreateSubscriptionTypeDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -26,7 +27,7 @@ export class SubscriptionTypesService {
         return this.createSubscriptionType({...dto, id: subscriptionTypeId});
     }
 
-    async delete(name: string, req){
+    async delete(name: string, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -58,7 +59,7 @@ export class SubscriptionTypesService {
         return this.postgreSQLService.subscriptionType.findFirst({where: {name}});
     }
 
-    async getAll(req): Promise<SubscriptionType[]>{
+    async getAll(req: Request): Promise<SubscriptionType[]>{
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

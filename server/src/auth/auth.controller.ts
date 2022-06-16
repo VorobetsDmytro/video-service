@@ -8,6 +8,7 @@ import { ForgotPassDto } from './dto/forgot-pass.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { ResetPassDto } from './dto/reset-pass.dto';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -17,7 +18,7 @@ export class AuthController {
     @UseGuards(IsLogedInGuard)
     @UseGuards(IsBannedGuard)
     @HttpCode(200)
-    auth(@Req() req) {
+    auth(@Req() req: Request) {
         return this.authService.auth(req);
     }
 
@@ -37,7 +38,7 @@ export class AuthController {
     @UseGuards(IsLogedInGuard)
     @UseGuards(IsBannedGuard)
     @HttpCode(200)
-    logout(@Req() req){
+    logout(@Req() req: Request){
         return this.authService.logout(req);
     }
 
@@ -58,7 +59,7 @@ export class AuthController {
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
     @HttpCode(200)
-    resetPassAccept(@Param('resetPasswordId') resetPasswordId: string, @Req() req){
+    resetPassAccept(@Param('resetPasswordId') resetPasswordId: string, @Req() req: Request){
         return this.authService.resetPassAccept(resetPasswordId, req);
     }
 }

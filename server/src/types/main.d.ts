@@ -15,6 +15,14 @@ declare namespace NodeJS {
     }
 }
 
+declare global {
+    namespace Express {
+        interface Request {
+            user?: User | undefined;
+        }
+    }
+}
+
 declare namespace Express {
     export interface User {
         id: string;

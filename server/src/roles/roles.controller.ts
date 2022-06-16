@@ -4,6 +4,7 @@ import { IsBannedGuard } from '../guards/is-banned.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { RolesService } from './roles.service';
+import { Request } from 'express';
 
 @Controller('roles')
 export class RolesController {
@@ -14,7 +15,7 @@ export class RolesController {
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
     @HttpCode(201)
-    create(@Body() dto: CreateRoleDto, @Req() req){
+    create(@Body() dto: CreateRoleDto, @Req() req: Request){
         return this.rolesService.create(dto, req);
     }
 
@@ -23,7 +24,7 @@ export class RolesController {
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
     @HttpCode(200)
-    getAll(@Req() req){
+    getAll(@Req() req: Request){
         return this.rolesService.getAll(req);
     }
 
@@ -32,7 +33,7 @@ export class RolesController {
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
     @HttpCode(200)
-    delete(@Param('value') value: string, @Req() req){
+    delete(@Param('value') value: string, @Req() req: Request){
         return this.rolesService.delete(value, req);
     }
 }

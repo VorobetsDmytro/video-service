@@ -14,6 +14,7 @@ import { RoleTypes } from '../roles/roles.type';
 import { EditVideoDto } from './dto/edit-video.dto';
 import { CommentsService } from '../comments/comments.service';
 import { LogsService } from '../logs/logs.service';
+import { Response, Request } from 'express';
 
 @Injectable()
 export class VideosService {
@@ -24,7 +25,7 @@ export class VideosService {
                 @Inject(forwardRef(() => CommentsService)) private commentsService: CommentsService,
                 private logsService: LogsService){}
 
-    async addVideo(dto: CreateVideoDto, req){
+    async addVideo(dto: CreateVideoDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -38,7 +39,7 @@ export class VideosService {
         return {video, message: 'The video has been added successfully.'};
     }
 
-    async edit(dto: EditVideoDto, videoId: string, req){
+    async edit(dto: EditVideoDto, videoId: string, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -54,7 +55,7 @@ export class VideosService {
         return {video, message: 'The video has been updated successfully.'};
     }
 
-    async delete(videoId: string, req){
+    async delete(videoId: string, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -80,7 +81,7 @@ export class VideosService {
         return this.postgreSQLService.video.create({data: dto});
     }
 
-    async getById(videoId: string, req){
+    async getById(videoId: string, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -111,7 +112,7 @@ export class VideosService {
         };
     }
 
-    async getAll(req){
+    async getAll(req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -140,7 +141,7 @@ export class VideosService {
         };
     }
 
-    async watch(videoId: string, req, res){
+    async watch(videoId: string, req: Request, res: Response){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -174,11 +175,11 @@ export class VideosService {
         this.sendVideoChunk(video, req, res);
     }
 
-    async download(videoId: string, req, res) {
+    async download(videoId: string, req: Request, res: Response) {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 400);  
         const video = await this.getVideoById(videoId);
         if(!video)
             throw new HttpException('The video was not found.', 400);
@@ -206,7 +207,7 @@ export class VideosService {
         this.sendVideoChunk(video, req, res);
     }
 
-    sendVideoChunk(video: Video, req, res) {
+    sendVideoChunk(video: Video, req: Request, res: Response) {
         const videoStat = fs.statSync(video.videoPath);
         const fileSize = videoStat.size;
         const videoRange = req.headers.range;

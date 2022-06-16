@@ -4,6 +4,7 @@ import { IsLogedInGuard } from '../guards/is-loged-in.guard';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { EditCommentDto } from './dto/edit-comment.dto';
+import { Request } from 'express';
 
 @Controller('comments')
 export class CommentsController {
@@ -12,21 +13,21 @@ export class CommentsController {
     @Post('/')
     @UseGuards(IsLogedInGuard)
     @UseGuards(IsBannedGuard)
-    create(@Body() dto: CreateCommentDto, @Req() req){
+    create(@Body() dto: CreateCommentDto, @Req() req: Request){
         return this.commentsService.create(dto, req);
     }
 
     @Patch('/:commentId')
     @UseGuards(IsLogedInGuard)
     @UseGuards(IsBannedGuard)
-    edit(@Body() dto: EditCommentDto, @Param('commentId') commentId: string, @Req() req){
+    edit(@Body() dto: EditCommentDto, @Param('commentId') commentId: string, @Req() req: Request){
         return this.commentsService.edit(dto, commentId, req);
     }
 
     @Delete('/:commentId')
     @UseGuards(IsLogedInGuard)
     @UseGuards(IsBannedGuard)
-    delete(@Param('commentId') commentId: string, @Req() req) {
+    delete(@Param('commentId') commentId: string, @Req() req: Request) {
         return this.commentsService.delete(commentId, req);
     }
 }

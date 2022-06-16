@@ -4,7 +4,7 @@ export class CreateVideoDto {
     id?: string;
 
     @IsString({message: 'The title must be a string.'})
-    @Length(1, 80, {message: 'The title can contain: 1 min and 80 max characters.'})
+    @Length(1, 150, {message: 'The title can contain: 1 min and 150 max characters.'})
     title: string;
 
     @IsString({message: 'The vieoPath must be a string.'})

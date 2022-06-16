@@ -9,6 +9,7 @@ import { v4 } from "uuid";
 import { ISelectUser, SecuredUser, SelectFullUser } from './users.type';
 import { ChangePassDto } from './dto/change-pass.dto';
 import * as bcrypt from 'bcryptjs';
+import { Request } from 'express';
 
 @Injectable()
 export class UsersService {
@@ -37,7 +38,7 @@ export class UsersService {
         return this.postgreSQLService.user.findFirst({ where: { id }, select});
     }
 
-    async getAll(req): Promise<SecuredUser[]>{
+    async getAll(req: Request): Promise<SecuredUser[]>{
         const userReq = req.user as Express.User;
         const user = await this.postgreSQLService.user.findUnique({where: {id: userReq.id}});
         if(!user)
@@ -46,7 +47,7 @@ export class UsersService {
         return this.postgreSQLService.user.findMany({select: SelectFullUser});
     }
 
-    async changePass(dto: ChangePassDto, req){
+    async changePass(dto: ChangePassDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.postgreSQLService.user.findUnique({where: {id: userReq.id}});
         if(!user)

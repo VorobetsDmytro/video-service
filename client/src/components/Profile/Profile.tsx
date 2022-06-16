@@ -24,7 +24,7 @@ let fileReader = new FileReader();
 let file: File;
 
 export const Profile = () => {
-    const {addCreditCard, topUpBalance} = useCreditCard();
+    const {addCreditCard, topUpBalance, removeTheCard} = useCreditCard();
     const {getAllSubscriptionTypes, buySubscription} = useSubscription();
     const {getProfile, ready, updateProfile} = useProfile();
     const [socket, setSocket] = useState<Socket>();
@@ -69,6 +69,12 @@ export const Profile = () => {
         if(!creditCardIdForBuy)
             return;
         if(await topUpBalance({money: +topUpSum}, creditCardIdForBuy))
+            window.location.reload();
+    }
+
+    const handleRemoveTheCard = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, creditCardId: string) => {
+        e.stopPropagation();
+        if(await removeTheCard(creditCardId))
             window.location.reload();
     }
 
@@ -184,10 +190,10 @@ export const Profile = () => {
             ?
             <>
             <div className={styles.profile__item}>
-                <h3><span>Downloads left:</span> {user.subscription && user.subscription.downloadsLeft == '999' ? 'Infinitely' : user.subscription?.downloadsLeft}</h3>
+                <h3><span>Downloads left:</span> {user.subscription && String(user.subscription.downloadsLeft) === '999' ? 'Infinitely' : user.subscription?.downloadsLeft}</h3>
             </div>
             <div className={styles.profile__item}>
-                <h3><span>Views left for today:</span> {user.subscription && user.subscription.viewsForTodayLeft == '999' ? 'Infinitely' : user.subscription?.viewsForTodayLeft}</h3>
+                <h3><span>Views left for today:</span> {user.subscription && String(user.subscription.viewsForTodayLeft) === '999' ? 'Infinitely' : user.subscription?.viewsForTodayLeft}</h3>
             </div>
             <div className={styles.profile__item}>
                 <h3><span>Subscription expires in:</span> {user.subscription && new Date(user.subscription.expiresIn).toLocaleDateString()}</h3>
@@ -200,6 +206,9 @@ export const Profile = () => {
                             <div onClick={() => setCreditCardIdForBuy(creditCard.id)} className={styles.profile_creditCard} key={index + Math.random()}>
                                 <h3 style={{color: creditCard.id === creditCardIdForBuy ? '#0066ff' : '#000'}}>Number: {creditCard.number}</h3>
                                 <h3 style={{color: creditCard.id === creditCardIdForBuy ? '#0066ff' : '#000'}}>Bill: {creditCard.money}</h3>
+                                <div className={styles.profile__btn} style={{marginLeft: '10px', marginBottom: '10px'}}>
+                                    <button onClick={e => handleRemoveTheCard(e, creditCard.id)}>Remove</button>
+                                </div>
                             </div>
                         )
                     })}

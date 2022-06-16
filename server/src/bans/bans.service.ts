@@ -7,6 +7,7 @@ import { SecuredUser, SelectSecuredUser } from '../users/users.type';
 import { v4 }from 'uuid';
 import { CreateBanDto } from './dto/create-ban.dto';
 import { GetUserIdParamsDto } from './dto/get-userId.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class BansService {
@@ -14,7 +15,7 @@ export class BansService {
                 @Inject(forwardRef(() => UsersService)) private usersService: UsersService,
                 private logsService: LogsService){}
 
-    async ban(dtoBody: CreateBanDto, dtoParams: GetUserIdParamsDto, req){
+    async ban(dtoBody: CreateBanDto, dtoParams: GetUserIdParamsDto, req: Request){
         const reqUser = req.user as Express.User;
         if(!dtoParams.userId)
             throw new HttpException('The user was not found.', 400);
@@ -35,7 +36,7 @@ export class BansService {
         return ban;
     }
 
-    async unban(dtoParams: GetUserIdParamsDto, req){
+    async unban(dtoParams: GetUserIdParamsDto, req: Request){
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

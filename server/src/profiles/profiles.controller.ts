@@ -6,6 +6,7 @@ import { RolesGuard } from '../guards/roles.guard';
 import { ChangeEmailAcceptDto } from './dto/change-email-accept.dto';
 import { ChangeProfileDto } from './dto/change-profile.dto';
 import { ProfilesService } from './profiles.service';
+import { Request } from 'express';
 
 @Controller('profiles')
 export class ProfilesController {
@@ -14,7 +15,7 @@ export class ProfilesController {
     @Get('/')
     @UseGuards(IsLogedInGuard)
     @UseGuards(IsBannedGuard)
-    getProfile(@Req() req){
+    getProfile(@Req() req: Request){
         return this.profilesService.getProfile(req);
     }
 
@@ -22,7 +23,7 @@ export class ProfilesController {
     @Roles(['ADMIN'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    getAllChangeEmailRequests(@Req() req){
+    getAllChangeEmailRequests(@Req() req: Request){
         return this.profilesService.getAllChangeEmailRequests(req);
     }
 
@@ -30,14 +31,14 @@ export class ProfilesController {
     @Roles(['ADMIN'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    getProfileByUserId(@Param('userId') userId: string, @Req() req) {
+    getProfileByUserId(@Param('userId') userId: string, @Req() req: Request) {
         return this.profilesService.getProfileByUserId(userId, req);
     }
 
     @Patch('/')
     @UseGuards(IsLogedInGuard)
     @UseGuards(IsBannedGuard)
-    changeProfile(@Body() dto: ChangeProfileDto, @Req() req){
+    changeProfile(@Body() dto: ChangeProfileDto, @Req() req: Request){
         return this.profilesService.changeProfile(dto, req);
     }
 
@@ -45,7 +46,7 @@ export class ProfilesController {
     @Roles(['ADMIN'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    changeEmailAccept(@Body() dto: ChangeEmailAcceptDto, @Param('changeEmailId') changeEmailId: string, @Req() req){
+    changeEmailAccept(@Body() dto: ChangeEmailAcceptDto, @Param('changeEmailId') changeEmailId: string, @Req() req: Request){
         return this.profilesService.changeEmailAccept(dto, changeEmailId, req);
     }
 }

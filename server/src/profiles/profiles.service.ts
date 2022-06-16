@@ -13,6 +13,7 @@ import { v4 } from "uuid";
 import { MailTransporterService } from '../mail-transporter/mail-transporter.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { LogsService } from '../logs/logs.service';
+import { Request } from 'express';
 
 @Injectable()
 export class ProfilesService {
@@ -23,7 +24,7 @@ export class ProfilesService {
                 private subscriptionsService: SubscriptionsService,
                 private logsService: LogsService){}
 
-    async getProfile(req){
+    async getProfile(req: Request){
         const userReq = req.user as Express.User;
         const role = await this.rolesService.getRoleByValue(userReq.role);
         if(!role)
@@ -48,7 +49,7 @@ export class ProfilesService {
         return {...user, subscription};
     }
 
-    async getProfileByUserId(userId: string, req) {
+    async getProfileByUserId(userId: string, req: Request) {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -75,7 +76,7 @@ export class ProfilesService {
         return {...userProfile, subscription};
     }
 
-    async changeProfile(dto: ChangeProfileDto, req){
+    async changeProfile(dto: ChangeProfileDto, req: Request){
         const userReq = req.user as Express.User;
         let user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
@@ -136,7 +137,7 @@ export class ProfilesService {
         return id;
     }
 
-    async getAllChangeEmailRequests(req){
+    async getAllChangeEmailRequests(req: Request){
         const userReq = req.user as Express.User;
         const user = await this.postgreSQLService.user.findUnique({where: {id: userReq.id}});
         if(!user)

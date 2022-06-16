@@ -3,6 +3,7 @@ import { Roles } from '../decorators/roles.decorator';
 import { IsBannedGuard } from '../guards/is-banned.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { TokensService } from './tokens.service';
+import { Request } from 'express';
 
 @Controller('tokens')
 export class TokensController {
@@ -12,7 +13,7 @@ export class TokensController {
     @Roles(['ADMIN'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    getAll(@Req() req){
+    getAll(@Req() req: Request){
         return this.tokenService.getAll(req);
     }
 }

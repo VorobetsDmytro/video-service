@@ -51,7 +51,7 @@ export const Video: FC<VideoArgs> = ({video}) => {
                 <img height={326} width={580}  src={`http://localhost:5000/previews/${preview}`} alt="Prev" />
                 <div><h3>{video.title}</h3></div>
                 <div>Duration: {getDuration(video.duration)}</div>
-                { user.canDownloadVideo && <button onClick={handleDownloadClick} className={styles.video_btn}>Donwload</button>}
+                { user.canDownloadVideo && <button onClick={handleDownloadClick} className={styles.video_btn}>Download</button>}
             </div>
         </div>
     )

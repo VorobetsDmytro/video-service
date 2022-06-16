@@ -8,6 +8,7 @@ import { CreateActiovationLinkDto } from './dto/create-actvation-link.dto';
 import { LogsService } from '../logs/logs.service';
 import { UsersService } from '../users/users.service';
 import { SelectSecuredUser } from '../users/users.type';
+import { Request } from 'express';
 
 @Injectable()
 export class ActivationLinksService {
@@ -47,7 +48,7 @@ export class ActivationLinksService {
         return this.postgreSQLService.activationlink.create({data: dto});
     }
 
-    async getAll(req): Promise<Activationlink[]>{
+    async getAll(req: Request): Promise<Activationlink[]>{
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)

@@ -4,6 +4,7 @@ import { Roles } from '../decorators/roles.decorator';
 import { IsBannedGuard } from '../guards/is-banned.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { ActivationLinksService } from './activation-links.service';
+import { Request } from 'express';
 
 @Controller('activation-links')
 export class ActivationLinksController {
@@ -18,7 +19,7 @@ export class ActivationLinksController {
     @Roles(['ADMIN'])
     @UseGuards(RolesGuard)
     @UseGuards(IsBannedGuard)
-    getAll(@Req() req){
+    getAll(@Req() req: Request){
         return this.activationLinksService.getAll(req);
     }
 }
