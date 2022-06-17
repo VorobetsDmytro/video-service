@@ -18,7 +18,7 @@ export class SubscriptionTypesService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const checkSubscriptionType = await this.getSubscriptionTypeByType(dto.name);
         if(checkSubscriptionType)
             throw new HttpException('This subscription type already exists.', 400);
@@ -31,10 +31,10 @@ export class SubscriptionTypesService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const subscriptionTypeName = await this.deleteSubscriptionTypeByName(name);
         if(!subscriptionTypeName)
-            throw new HttpException('This subscription type was not found.', 400);
+            throw new HttpException('This subscription type was not found.', 404);
         await this.logsService.create({operation: `Delete subscription type. Subscription type name: < ${subscriptionTypeName} >`, createdBy: user.id});
         return { subscriptionTypeName };
     }
@@ -63,7 +63,7 @@ export class SubscriptionTypesService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         await this.logsService.create({operation: `Get all the subscription types`, createdBy: user.id});
         return this.postgreSQLService.subscriptionType.findMany();
     }

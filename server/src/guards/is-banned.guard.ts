@@ -22,7 +22,7 @@ export class IsBannedGuard implements CanActivate {
             if(user.bans.length > 0){
                 const lastBan = user.bans[user.bans.length - 1];
                 if(!lastBan.unBannedAt)
-                    throw new HttpException(`BANNED! By: <${lastBan.bannedById}> Reason: ${lastBan.banReason}`, 403);
+                    throw new HttpException(`BANNED! Reason: ${lastBan.banReason}`, 403);
             }
             return true;
         } catch (error) {

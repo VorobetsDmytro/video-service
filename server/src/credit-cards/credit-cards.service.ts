@@ -20,7 +20,7 @@ export class CreditCardsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const correctedNumber = this.correctTheCreditCardNumber(dto.number);
         const checkCreditCard = await this.getCreditCardByUserIdAndNumber(user.id, correctedNumber);
         if(checkCreditCard)
@@ -35,10 +35,10 @@ export class CreditCardsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const checkCreditCard = await this.getCreditCardByIdAndUserId(dto.creditCardId, user.id);
         if(!checkCreditCard)
-            throw new HttpException('This card was not found.', 400);
+            throw new HttpException('This card was not found.', 404);
         await this.deleteCreditCard(checkCreditCard);
         await this.logsService.create({operation: `Remove credit card. Credit card id: < ${checkCreditCard.id} >`, createdBy: user.id});
         return {message: 'Your credit card has been removed successfully.'}
@@ -56,7 +56,7 @@ export class CreditCardsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         await this.logsService.create({operation: `Get all the credit cards`, createdBy: user.id});
         return this.postgreSQLService.creditCard.findMany();
     }
@@ -90,10 +90,10 @@ export class CreditCardsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         let creditCard = await this.getCreditCardByIdAndUserId(dto.creditCardId, user.id);
         if(!creditCard)
-            throw new HttpException('The credit card was not found.', 400);
+            throw new HttpException('The credit card was not found.', 404);
         creditCard = await this.topUp(creditCard, dto.money);
         await this.logsService.create({operation: `Top up balance on ${dto.money} dollar(s). Credit card id: < ${creditCard.id} >`, createdBy: user.id});
         return {creditCard, message: 'You have topped up your bill successfully.'}

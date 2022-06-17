@@ -26,7 +26,7 @@ export class SubscriptionsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         await this.logsService.create({operation: `Get all the subscriptions`, createdBy: user.id});
         return this.postgreSQLService.subscription.findMany();
     }
@@ -35,13 +35,13 @@ export class SubscriptionsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const subscriptionType = await this.subscriptionTypesService.getSubscriptionTypeByType(dto.subscriptionTypeName);
         if(!subscriptionType)
-            throw new HttpException('The subscription type was not found.', 400);
+            throw new HttpException('The subscription type was not found.', 404);
         const creditCard = await this.creditCardsService.getCreditCardByIdAndUserId(dto.creditCardId, user.id);
         if(!creditCard)
-            throw new HttpException('The credit card was not found.', 400);
+            throw new HttpException('The credit card was not found.', 404);
         if(creditCard.money - subscriptionType.price < 0)
             throw new HttpException(`You don't have enough money to buy it.`, 400);
         const curSubscription = await this.getSubscriptionByUserId(user.id);

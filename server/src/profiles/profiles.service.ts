@@ -28,21 +28,21 @@ export class ProfilesService {
         const userReq = req.user as Express.User;
         const role = await this.rolesService.getRoleByValue(userReq.role);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         const selectUser = role.value === RoleTypes.SUBSCRIBER ? SelectSecuredUser : SelectFullUser;
         const user = await this.usersService.getOneById(userReq.id, selectUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         let subscription = null;
         if(role.value !== RoleTypes.ADMIN) {
             subscription = await this.subscriptionsService.getSubscriptionByUserId(user.id);
             if(!subscription)
-                throw new HttpException('The subscription was not found.', 400);
+                throw new HttpException('The subscription was not found.', 404);
             const canResetSubscription = await this.subscriptionsService.canResetSubscription(subscription);
             if(canResetSubscription){
                 subscription = await this.subscriptionsService.resetSubscription(subscription);
                 if(!subscription)
-                    throw new HttpException('The subscription type was not found.', 400);
+                    throw new HttpException('The subscription type was not found.', 404);
             }
         }
         await this.logsService.create({operation: `Get profile`, createdBy: user.id});
@@ -53,23 +53,23 @@ export class ProfilesService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const userProfile = await this.usersService.getOneById(userId, SelectFullUser);
         if(!userProfile)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const role = await this.rolesService.getRoleById(userProfile.roleId);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         let subscription = null;
         if(role.value !== RoleTypes.ADMIN){
             subscription = await this.subscriptionsService.getSubscriptionByUserId(userProfile.id);
             if(!subscription)
-                throw new HttpException('The subscription was not found.', 400);
+                throw new HttpException('The subscription was not found.', 404);
             const canResetSubscription = await this.subscriptionsService.canResetSubscription(subscription);
             if(canResetSubscription){
                 subscription = await this.subscriptionsService.resetSubscription(subscription);
                 if(!subscription)
-                    throw new HttpException('The subscription type was not found.', 400);
+                    throw new HttpException('The subscription type was not found.', 404);
             }
         }
         await this.logsService.create({operation: `Get profile by user id. User id: < ${userId} >`, createdBy: user.id});
@@ -80,7 +80,7 @@ export class ProfilesService {
         const userReq = req.user as Express.User;
         let user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         let message = '';
         if(dto.email) {
             const checkEmail = await this.postgreSQLService.user.findFirst({where: {email: dto.email}});
@@ -141,7 +141,7 @@ export class ProfilesService {
         const userReq = req.user as Express.User;
         const user = await this.postgreSQLService.user.findUnique({where: {id: userReq.id}});
         if(!user)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The user was not found.', 404);
         await this.logsService.create({operation: `Get all change email requests`, createdBy: user.id});
         return this.postgreSQLService.changeEmail.findMany();
     }
@@ -150,7 +150,7 @@ export class ProfilesService {
         const userReq = req.user as Express.User;
         const user = await this.postgreSQLService.user.findUnique({where: {id: userReq.id}});
         if(!user)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The user was not found.', 404);
         const comparePasswords = await bcrypt.compare(dto.password, user.password);
         if(!comparePasswords)
             throw new HttpException('Incorrect data.', 400);

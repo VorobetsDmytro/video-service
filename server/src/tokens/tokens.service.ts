@@ -49,7 +49,7 @@ export class TokensService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         await this.logsService.create({operation: `Get all the tokens`, createdBy: user.id});
         return this.postgreSQLService.token.findMany();
     }

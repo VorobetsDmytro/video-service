@@ -71,12 +71,12 @@ export class AuthService {
     async validateSubscriptionExpires(user: User | SecuredUser){
         const subscription = await this.subscriptionsService.getSubscriptionByUserId(user.id);
         if(!subscription)
-            throw new HttpException('The subscription was not found.', 400);
+            throw new HttpException('The subscription was not found.', 404);
         if(subscription.subscriptionType.name !== SubscriptionType_Types.STANDART && subscription.expiresIn <= new Date()){
             await this.subscriptionsService.deleteSubscription(subscription);
             const subscriptionType = await this.subscriptionTypesService.getSubscriptionTypeByType(SubscriptionType_Types.STANDART);
             if(!subscriptionType)
-                throw new HttpException('The subscription type was not found.', 400);
+                throw new HttpException('The subscription type was not found.', 404);
             const subscriptionId = await this.subscriptionsService.generateSubscriptionId();
             const expiresIn = new Date();
             expiresIn.setDate(new Date().getDate() + subscriptionType.duration);
@@ -98,7 +98,7 @@ export class AuthService {
             throw new HttpException('Incorrect data.', 400);
         const lastBan = await this.usersService.isBanned(user);
         if(lastBan)
-            throw new HttpException(`BANNED! By: <${lastBan.bannedById}> Reason: ${lastBan.banReason}`, 403);
+            throw new HttpException(`BANNED! Reason: ${lastBan.banReason}`, 403);
         const activationLink = await this.postgreSQLService.activationlink.findFirst({where: {userId: user.id}});
         if(!activationLink || !activationLink.isActivated)
             throw new HttpException('Incorrect data.', 400);
@@ -107,7 +107,7 @@ export class AuthService {
             throw new HttpException('Incorrect data.', 400);
         const role = await this.rolesService.getRoleById(user.roleId);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         if(role.value !== RoleTypes.ADMIN)
             await this.validateSubscriptionExpires(user);
         const token = await this.tokensService.generateToken(user);
@@ -123,10 +123,10 @@ export class AuthService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The user was not found.', 404);
         const role = await this.rolesService.getRoleById(user.roleId);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         if(role.value !== RoleTypes.ADMIN)
             await this.validateSubscriptionExpires(user);
         const token = await this.tokensService.generateToken(user);
@@ -141,10 +141,10 @@ export class AuthService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The user was not found.', 404);
         const token = await this.postgreSQLService.token.findFirst({where: {userId: user.id}});
         if(!token)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The token was not found.', 404);
         await this.tokensService.disactivateToken(token);
         await this.logsService.create({operation: 'Logout', createdBy: user.id});
         return { message: 'Logout has been executed successfully.' };
@@ -192,7 +192,7 @@ export class AuthService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The user was not found.', 404);
         const resetPassword = await this.postgreSQLService.resetPassword.findUnique({where: {id: resetPasswordId}});
         if(!resetPassword)
             throw new HttpException(`This reset password doesn't exist.`, 400);

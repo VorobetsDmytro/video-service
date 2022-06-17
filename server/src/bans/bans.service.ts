@@ -18,13 +18,13 @@ export class BansService {
     async ban(dtoBody: CreateBanDto, dtoParams: GetUserIdParamsDto, req: Request){
         const reqUser = req.user as Express.User;
         if(!dtoParams.userId)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const user = await this.usersService.getOneById(reqUser.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const banUser = await this.usersService.getOneById(dtoParams.userId, SelectSecuredUser);
         if(!banUser)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         if(user.id === banUser.id)
             throw new HttpException('You cannot ban yourself.', 400);
         const lastBan = await this.isBanned(banUser);
@@ -40,12 +40,12 @@ export class BansService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The user was not found.', 404);
         if(!dtoParams.userId)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const ubanUser = await this.usersService.getOneById(dtoParams.userId, SelectSecuredUser);
         if(!ubanUser)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         let lastBan = await this.isBanned(ubanUser);
         if(!lastBan)
             throw new HttpException('This user is not banned.', 400);

@@ -19,7 +19,7 @@ export class RolesService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const checkRole = await this.getRoleByValue(dto.value);
         if(checkRole)
             throw new HttpException('This role already exists.', 400);
@@ -33,10 +33,10 @@ export class RolesService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const roleValue = await this.deleteRoleByValue(value);
         if(!roleValue)
-            throw new HttpException('This role was not found.', 400);
+            throw new HttpException('This role was not found.', 404);
         await this.logsService.create({operation: `Delete role. Role value: < ${roleValue} >`, createdBy: user.id});
         return {roleValue};
     }
@@ -49,7 +49,7 @@ export class RolesService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         await this.logsService.create({operation: `Get all the roles`, createdBy: user.id});
         return this.postgreSQLPrismaService.role.findMany();
     }

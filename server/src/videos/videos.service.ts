@@ -29,9 +29,9 @@ export class VideosService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         if(!fs.existsSync(dto.videoPath))
-            throw new HttpException('The video was not found.', 400);
+            throw new HttpException('The video was not found.', 404);
         const duration = Math.floor(await vDuration.getVideoDurationInSeconds(dto.videoPath));
         const videoId = await this.generateVideoId();
         const video = await this.createVideo({...dto, id: videoId, duration});
@@ -43,10 +43,10 @@ export class VideosService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         let video = await this.getVideoById(videoId);
         if(!video)
-            throw new HttpException('The video was not found.', 400);
+            throw new HttpException('The video was not found.', 404);
         if(dto.previewPath)
             if(fs.existsSync(video.previewPath))
                 fs.unlinkSync(video.previewPath);
@@ -59,10 +59,10 @@ export class VideosService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const video = await this.getVideoById(videoId);
         if(!video)
-            throw new HttpException('The video was not found.', 400);
+            throw new HttpException('The video was not found.', 404);
         await this.commentsService.deleteCommentsByVideoId(video.id);
         if(fs.existsSync(video.videoPath))
             fs.unlinkSync(video.videoPath);
@@ -85,13 +85,13 @@ export class VideosService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const video = await this.getVideoById(videoId);
         if(!video)
-            throw new HttpException('The video was not found.', 400);
+            throw new HttpException('The video was not found.', 404);
         const role = await this.rolesService.getRoleByValue(userReq.role);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         let subscription = null;
         if(role.value !== RoleTypes.ADMIN){
             subscription = await this.subscriptionsService.getSubscriptionByUserId(user.id);
@@ -116,20 +116,20 @@ export class VideosService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const role = await this.rolesService.getRoleById(user.roleId);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         let subscription = null;
         if(role.value !== RoleTypes.ADMIN){
             subscription = await this.subscriptionsService.getSubscriptionByUserId(user.id);
             if(!subscription)
-                throw new HttpException('The subscription was not found.', 400);
+                throw new HttpException('The subscription was not found.', 404);
             const canResetSubscription = await this.subscriptionsService.canResetSubscription(subscription);
             if(canResetSubscription){
                 subscription = await this.subscriptionsService.resetSubscription(subscription);
                 if(!subscription)
-                    throw new HttpException('The subscription type was not found.', 400);
+                    throw new HttpException('The subscription type was not found.', 404);
             }
         }
         const videos = await this.postgreSQLService.video.findMany({include: {comments: { include: {user: {select: StandartUser}}}}, orderBy: {createdAt: 'desc'}});
@@ -145,24 +145,24 @@ export class VideosService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const video = await this.getVideoById(videoId);
         if(!video)
-            throw new HttpException('The video was not found.', 400);
+            throw new HttpException('The video was not found.', 404);
         const role = await this.rolesService.getRoleById(user.roleId);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         if(role.value !== RoleTypes.ADMIN){
             let subscription = await this.subscriptionsService.getSubscriptionByUserId(user.id);
             if(!subscription)
-                throw new HttpException('The subscription was not found.', 400);
+                throw new HttpException('The subscription was not found.', 404);
             if(subscription.subscriptionType.name === SubscriptionType_Types.STANDART)
                 throw new HttpException(`You don't have this permission. Buy a more better subscription for it.`, 400);
             const canResetSubscription = await this.subscriptionsService.canResetSubscription(subscription);
             if(canResetSubscription){
                 subscription = await this.subscriptionsService.resetSubscription(subscription);
                 if(!subscription)
-                    throw new HttpException('The subscription type was not found.', 400);
+                    throw new HttpException('The subscription type was not found.', 404);
             }
             if(subscription.viewsForTodayLeft <= 0 && subscription.lastViewedVideoId !== video.id)
                 throw new HttpException(`Your access to view is exhausted. Come tomorrow!`, 400);
@@ -179,22 +179,22 @@ export class VideosService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);  
+            throw new HttpException('The user was not found.', 404);
         const video = await this.getVideoById(videoId);
         if(!video)
-            throw new HttpException('The video was not found.', 400);
+            throw new HttpException('The video was not found.', 404);
         const role = await this.rolesService.getRoleById(user.roleId);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         if(role.value !== RoleTypes.ADMIN){
             let subscription = await this.subscriptionsService.getSubscriptionByUserId(user.id);
             if(!subscription)
-                throw new HttpException('The subscription was not found.', 400);
+                throw new HttpException('The subscription was not found.', 404);
             const canResetSubscription = await this.subscriptionsService.canResetSubscription(subscription);
             if(canResetSubscription){
                 subscription = await this.subscriptionsService.resetSubscription(subscription);
                 if(!subscription)
-                    throw new HttpException('The subscription type was not found.', 400);
+                    throw new HttpException('The subscription type was not found.', 404);
             }
             if(subscription.downloadsLeft <= 0)
                 throw new HttpException(`Your access to download is exhausted.`, 400);

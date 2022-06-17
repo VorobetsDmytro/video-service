@@ -17,8 +17,8 @@ export class ResetPasswordsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
-         await this.logsService.create({operation: `Get all the reset password requests`, createdBy: user.id});
+            throw new HttpException('The user was not found.', 404);
+        await this.logsService.create({operation: `Get all the reset password requests`, createdBy: user.id});
         return this.postgreSQLService.resetPassword.findMany();
     }
 

@@ -52,7 +52,7 @@ export class ActivationLinksService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The user was not found.', 404);
         await this.logsService.create({operation: 'Get all acivation links', createdBy: user.id});
         return this.postgreSQLService.activationlink.findMany();
     }

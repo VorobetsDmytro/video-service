@@ -42,7 +42,7 @@ export class UsersService {
         const userReq = req.user as Express.User;
         const user = await this.postgreSQLService.user.findUnique({where: {id: userReq.id}});
         if(!user)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The user was not found.', 404);
         await this.logsService.create({operation: 'Get all the users', createdBy: user.id});
         return this.postgreSQLService.user.findMany({select: SelectFullUser});
     }
@@ -51,7 +51,7 @@ export class UsersService {
         const userReq = req.user as Express.User;
         const user = await this.postgreSQLService.user.findUnique({where: {id: userReq.id}});
         if(!user)
-            throw new HttpException('No authorization', 401);
+            throw new HttpException('The user was not found.', 404);
         const comparePasswords = await bcrypt.compare(dto.oldPass, user.password);
         if(!comparePasswords)
             throw new HttpException('Incorrect data.', 400);

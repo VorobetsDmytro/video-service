@@ -26,17 +26,17 @@ export class CommentsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const video = await this.videosService.getVideoById(dto.videoId);
         if(!video)
-            throw new HttpException('The video was not found.', 400);
+            throw new HttpException('The video was not found.', 404);
         const role = await this.rolesService.getRoleByValue(userReq.role);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         if(role.value !== RoleTypes.ADMIN){
             const subscription = await this.subscriprionsService.getSubscriptionByUserId(user.id);
             if(!subscription)
-                throw new HttpException('The subscription was not found.', 400);
+                throw new HttpException('The subscription was not found.', 404);
             if(!subscription.subscriptionType.canAddComments)
                 throw new HttpException(`You don't have this permission. Buy a more better subscription for it.`, 400);
         }
@@ -50,10 +50,10 @@ export class CommentsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         let comment = await this.getCommentById(commentId);
         if(!comment)
-            throw new HttpException('The comment was not found.', 400);
+            throw new HttpException('The comment was not found.', 404);
         comment = await this.updateComment(dto, comment);
         await this.logsService.create({operation: `Edit the comment. Comment id: < ${comment.id} >`, createdBy: user.id});
         return {comment};
@@ -63,17 +63,17 @@ export class CommentsService {
         const userReq = req.user as Express.User;
         const user = await this.usersService.getOneById(userReq.id, SelectSecuredUser);
         if(!user)
-            throw new HttpException('The user was not found.', 400);
+            throw new HttpException('The user was not found.', 404);
         const role = await this.rolesService.getRoleById(user.roleId);
         if(!role)
-            throw new HttpException('The role was not found.', 400);
+            throw new HttpException('The role was not found.', 404);
         let comment: Comment;
         if(role.value === RoleTypes.ADMIN)
             comment = await this.getCommentById(commentId);
         else
             comment = await this.getCommentByIdAndUserId(commentId, user.id);
         if(!comment)
-            throw new HttpException('The comment was not found.', 400);
+            throw new HttpException('The comment was not found.', 404);
         await this.deleteComment(comment);
         await this.logsService.create({operation: `Delete comment: Comment id: < ${comment.id} >`, createdBy: user.id});
         return {comment};
