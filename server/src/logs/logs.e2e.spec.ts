@@ -34,6 +34,7 @@ describe('Logs', () => {
         return [token, user, userRole!];
     }
     beforeAll(async () => {
+        jest.setTimeout(60000);
         const module: TestingModule = await Test.createTestingModule({
             imports: [
                 AppModule
