@@ -118,11 +118,11 @@ describe('Subscription-types', () => {
                 subscriptionTypeName: subscriptionType.name
             });
         });
-        it('should return the 400 status code', async () => {
+        it('should return the 404 status code', async () => {
             await supertest(httpServer)
                 .delete(`/subscription-types/delete/123`)
                 .set("authorization", `Bearer ${adminToken}`)
-                .expect(400)
+                .expect(404)
         });
         it('should return the 403 status code', async () => {
             const dtoSType = gDto.generateSubscriptionTypeDto('type2');

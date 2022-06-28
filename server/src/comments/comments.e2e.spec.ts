@@ -113,13 +113,13 @@ describe('Comments', () => {
                 }
             })
         });
-        it('should return the 400 status code', async () => {
+        it('should return the 404 status code', async () => {
             const video = await videosService.createVideo(gDto.generateVideoDto('', ''));
             const comment = await commentsService.createComment(gDto.generateCommentDto(admin.id, video.id));
             await supertest(httpServer)
                 .delete(`/comments/${comment.id}`)
                 .set("authorization", `Bearer ${subscriberToken}`)
-                .expect(400)
+                .expect(404)
         });
         it('should return the 401 status code', async () => {
             const video = await videosService.createVideo(gDto.generateVideoDto('', ''));

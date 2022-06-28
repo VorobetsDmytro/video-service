@@ -127,11 +127,11 @@ describe('Roles', () => {
                 roleValue: role.value
             });
         });
-        it('should return the 400 status code', async () => {
+        it('should return the 404 status code', async () => {
             await supertest(httpServer)
                 .delete(`/roles/delete/123`)
                 .set("authorization", `Bearer ${adminToken}`)
-                .expect(400)
+                .expect(404)
         });
         it('should return the 403 status code', async () => {
             const dtoRole = gDto.generateRoleDto('newrole2');

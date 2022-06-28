@@ -153,12 +153,12 @@ describe('Video', () => {
                 .set('range', 'bytes=0-')
                 .expect(206);
         });
-        it('should returnt the 400 status code', async () => {
+        it('should returnt the 404 status code', async () => {
             await supertest(httpServer)
                 .get(`/videos/watch/132`)
                 .set("authorization", `Bearer ${adminToken}`)
                 .set('range', 'bytes=0-')
-                .expect(400);
+                .expect(404);
         });
         it('should returnt the 401 status code', async () => {
             const dto = gDto.generateVideoDto('', path.resolve(__dirname, './forTest.mp4'));
@@ -179,12 +179,12 @@ describe('Video', () => {
                 .set('range', 'bytes=0-')
                 .expect(206);
         });
-        it('should returnt the 400 status code', async () => {
+        it('should returnt the 404 status code', async () => {
             await supertest(httpServer)
                 .get(`/videos/download/132`)
                 .set("authorization", `Bearer ${adminToken}`)
                 .set('range', 'bytes=0-')
-                .expect(400);
+                .expect(404);
         });
         it('should returnt the 401 status code', async () => {
             const dto = gDto.generateVideoDto('', path.resolve(__dirname, './forTest.mp4'));
