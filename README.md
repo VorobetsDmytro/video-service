@@ -48,4 +48,4 @@ To run the client:
 >npm run start 
 
 ## Author
-[Dmytro Vorobets](https://github.com/Parasik72)
+[Dmytro Vorobets](https://github.com/VorobetsDmytro)
